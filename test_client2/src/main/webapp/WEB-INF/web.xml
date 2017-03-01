@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	id="WebApp_ID" version="2.5">
+	<display-name>test_client2</display-name>
+	<!-- 加载配置文件 -->
+	 <context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			classpath:config/spring-resource.xml
+			classpath:dds-session.xml,		
+			classpath:application-sso-client.xml,
+			classpath:sso__client/application-sso-wx-redis.xml,
+			classpath:sso__client/application-sso-wx-context.xml
+		</param-value>
+	</context-param>
+	
+	<!-- log4j日志加载 -->
+	<context-param>
+		<param-name>log4jConfigLocation</param-name>
+		<param-value>classpath:config/log4j.xml</param-value>
+	</context-param>
+	
+	<!-- 监听自动装配 -->
+	 <listener>
+	    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	 </listener>
+	 
+	 <!-- 日志监听 -->
+	<listener>
+		<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+	</listener>
+	
+	<!-- restFull  -->
+	<listener>
+		<listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+	</listener>
+	
+	 <!-- 中文乱码 过滤    该方法只对post有效  -->
+	<filter>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>
+			org.springframework.web.filter.CharacterEncodingFilter
+		</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+		<init-param>
+			<param-name>forceEncoding</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<!--请求过滤器  可以将请求转换为标准的HTTP方法，使得支持GET、POST、PUT与DELETE请求 -->
+	  <filter>
+			<filter-name>HiddenHttpMethodFilter</filter-name>
+			<filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
+		</filter>
+		<filter-mapping>
+			<filter-name>HiddenHttpMethodFilter</filter-name>
+			<servlet-name>springServlet</servlet-name>
+		</filter-mapping>
+		
+		<!--  ========== sso 接入  start============    -->
+		
+	<filter>
+		<filter-name>sessionFilter</filter-name>
+		<filter-class>com.saic.framework.session.filter.DdsSessionCooikeFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>sessionFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+      <!-- SSOFilter 配置有哪些请求是强制用户登录的 -->		
+	 <filter>
+        <filter-name>WXSSOFilter</filter-name>
+        <filter-class>com.saike.framework.sso.client.SSOFilter</filter-class>
+    </filter>
+    <!-- 设置SSOFilter所负责拦截的资源 -->
+    <filter-mapping>
+        <filter-name>WXSSOFilter</filter-name>
+        <url-pattern>/login/tologin</url-pattern>
+    </filter-mapping> 
+
+<!--  ========== sso 接入  end============    -->
+
+<!-- 对静态文件访问支持 方法1 -->
+	<servlet-mapping>
+	    <servlet-name>default</servlet-name>
+	    <url-pattern>*.jpg</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+	    <servlet-name>default</servlet-name>
+	    <url-pattern>*.js</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+	    <servlet-name>default</servlet-name>
+	    <url-pattern>*.css</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+	    <servlet-name>default</servlet-name>
+	    <url-pattern>*.html</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+	    <servlet-name>default</servlet-name>
+	    <url-pattern>*.png</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+	<servlet-name>default</servlet-name>
+	    <url-pattern>*.gif</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+	    <servlet-name>default</servlet-name>
+	    <url-pattern>*.text</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+	    <servlet-name>default</servlet-name>
+	    <url-pattern>*.swf</url-pattern>
+	</servlet-mapping> 
+ 
+<!-- springmvc 配置文件加载 -->
+	<servlet>
+		<servlet-name>springServlet</servlet-name>
+		<servlet-class>
+			org.springframework.web.servlet.DispatcherServlet
+		</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>
+				classpath:config/spring-mvc.xml
+			</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>	 
+	<servlet-mapping>
+		<servlet-name>springServlet</servlet-name>
+		<url-pattern>/</url-pattern>     <!-- 配置为/时必须配置 对静态文件访问支持 否则静态文件无法访问-->
+	</servlet-mapping>
+	<!-- session超时定义,单位为分钟 -->
+	<session-config>
+		<session-timeout>30</session-timeout>
+	</session-config>
+
+</web-app>

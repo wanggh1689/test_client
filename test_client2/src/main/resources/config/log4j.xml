@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+	<appender name="stdout" class="org.apache.log4j.ConsoleAppender">
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yyyy/MM/dd HH:mm:ss.sss} [%-5p] %c - %m%n" />
+		</layout>
+	</appender>
+   
+   <!-- 主日志文件 -->
+  <appender name="output" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="${catalina.base}/logs/output.log" />
+		<param name="maxFileSize" value="20000KB" />
+		<param name="maxBackupIndex" value="20" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yyyy/MM/dd HH:mm:ss.sss} [%-5p] %c - %m%n" />
+		</layout>
+	</appender>
+
+ <appender name="debugLog" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="${catalina.base}/logs/debugLog.log" />
+		<param name="maxFileSize" value="20000KB" />
+		<param name="maxBackupIndex" value="10" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yyyy/MM/dd HH:mm:ss.sss} [%-5p] %c - %m%n" />
+		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="LevelMax" value="DEBUG" />
+			<param name="LevelMin" value="DEBUG" />
+		</filter>
+	</appender>
+
+	<appender name="infoLog" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="${catalina.base}/logs/infoLog.log" />
+		<param name="maxFileSize" value="20000KB" />
+		<param name="maxBackupIndex" value="10" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yyyy/MM/dd HH:mm:ss.sss} [%-5p] %c - %m%n" />
+		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="LevelMax" value="INFO" />
+			<param name="LevelMin" value="INFO" />
+		</filter>
+	</appender>
+
+	<appender name="warnLog" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="${catalina.base}/logs/warnLog.log" />
+		<param name="maxFileSize" value="20000KB" />
+		<param name="maxBackupIndex" value="10" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yyyy/MM/dd HH:mm:ss.sss} [%-5p] %c - %m%n" />
+		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="LevelMax" value="WARN" />
+			<param name="LevelMin" value="WARN" />
+		</filter>
+	</appender>
+
+	<appender name="errorLog" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="${catalina.base}/logs/errorLog.log" />
+		<param name="maxFileSize" value="20000KB" />
+		<param name="maxBackupIndex" value="10" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yyyy/MM/dd HH:mm:ss.sss} [%-5p] %c - %m%n" />
+		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="LevelMin" value="ERROR" />
+			<param name="LevelMax" value="ERROR" />
+		</filter>
+	</appender>
+	
+	<!-- 下面是打印mybatis语句的配置-->
+	 <logger name="com.ibatis" additivity="true"> 
+	  <level value="DEBUG" /> 
+	 </logger> 
+	 <logger name="java.sql.Connection" additivity="true"> 
+	  <level value="DEBUG" /> 
+	 </logger> 
+	 <logger name="java.sql.Statement" additivity="true"> 
+	  <level value="DEBUG" /> 
+	 </logger> 
+	 <logger name="java.sql.PreparedStatement" additivity="true"> 
+	  <level value="DEBUG" /> 
+	 </logger> 
+	 <logger name="java.sql.ResultSet" additivity="true"> 
+	  <level value="DEBUG" /> 
+	 </logger> 
+	 
+	 <root>
+        <level value="Info" />
+        <appender-ref ref="infoLog" />
+    </root>
+	 
+	<!-- <root>
+	    <priority value="info" />  	
+		<appender-ref ref="debugLog" />
+		<appender-ref ref="infoLog" />
+		<appender-ref ref="warnLog" />
+		<appender-ref ref="errorLog" />
+		<appender-ref ref="output" />
+		<appender-ref ref="stdout" />
+	</root> -->
+
+</log4j:configuration>
